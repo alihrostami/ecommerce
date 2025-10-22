@@ -22,7 +22,18 @@ class LoginPostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'mobile' => [
+                'required',
+                'exists:App\Models\User',
+                'ir_mobile:zero'
+            ],
+
+            'password' => [
+                'required',
+
+                'min:6',
+
+            ],
         ];
     }
 }

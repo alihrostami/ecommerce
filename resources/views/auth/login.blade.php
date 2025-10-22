@@ -38,6 +38,14 @@
 
                 <form class="space-y-5" action="{{route('auth.login.post')}}" method="POST">
                     @csrf
+                    @error('general')
+                    <div role="alert">
+                        <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                            {{$message}}
+                        </div>
+
+                    </div>
+                    @enderror
                     <div>
                         <label for="mobile" class="block text-sm/6 font-medium text-gray-500 dark:text-gray-300">
                             شماره موبایل
@@ -49,11 +57,18 @@
                                 name="mobile"
                                 autofocus
                                 tabindex="1"
-                                value=""
+                                value="{{old('mobile')}}"
                                 class="block w-full p-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400  sm:text-sm/6 transition-all text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400"
                             />
                         </div>
-                        <!-- ERROR -->
+                        @error('mobile')
+                        <div role="alert">
+                            <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                                {{$message}}
+                            </div>
+
+                        </div>
+                        @enderror
                     </div>
 
                     <div>
@@ -69,7 +84,14 @@
                                 class="block w-full p-3 text-base outline dark:outline-none outline-1 -outline-offset-1 placeholder:text-gray-400  sm:text-sm/6 transition-all text-gray-800 dark:text-gray-100 dark:bg-gray-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded-md outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-blue-400"
                             />
                         </div>
-                        <!-- ERROR -->
+                        @error('password')
+                        <div role="alert">
+                            <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                                {{$message}}
+                            </div>
+
+                        </div>
+                        @enderror
                     </div>
 
                     <div>

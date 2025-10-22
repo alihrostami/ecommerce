@@ -10,15 +10,21 @@ Route::get('/', [IndexController::class, 'index'])->name('index');
 
 Route::prefix('auth')->as('auth.')->group(function () {
 
-    Route::controller(RegisterController::class)->as('register.')->prefix('register')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'post')->name('post');
-    });
+    Route::controller(RegisterController::class)->as('register.')
+        ->middleware('guest')
+        ->prefix('register')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'post')->name('post');
+        });
 
-    Route::controller(LoginController::class)->as('login.')->prefix('login')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::post('/', 'post')->name('post');
-    });
+    Route::controller(LoginController::class)->as('login.')
+        ->middleware('guest')
+        ->prefix('login')->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'post')->name('post');
+        });
 
-    Route::get('logout', [LogoutController::class,'index'])->name('logout');
+    Route::get('logout', [LogoutController::class, 'index'])
+        ->middleware('auth')
+        ->name('logout');
 });
