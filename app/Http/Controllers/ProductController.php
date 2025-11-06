@@ -41,4 +41,11 @@ class ProductController extends Controller
         unset($queryString['exists']);
         return redirect()->route('products.index', $queryString);
     }
+
+    public function show(Product $product)
+    {
+        $title = $product->name;
+        $product->load('category');
+        return view('products.show',compact('title','product'));
+    }
 }
