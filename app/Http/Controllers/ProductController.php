@@ -6,6 +6,7 @@ use App\Http\Requests\ProductIndexRequest;
 use App\Models\Category;
 use App\Models\Product;
 use App\Services\ProductListHandler;
+use App\Services\UserCartManager;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -53,6 +54,7 @@ class ProductController extends Controller
             ->where('id', '!=', $product->id)
             ->take(6)
             ->get();
-        return view('products.show', compact('title', 'product','relatedProducts'));
+        $currentCartQty = UserCartManager::getProductQty($product->id);
+        return view('products.show', compact('title', 'product', 'relatedProducts', 'currentCartQty'));
     }
 }

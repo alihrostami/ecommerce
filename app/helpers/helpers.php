@@ -47,3 +47,11 @@ if (!function_exists('activeSortClass')) {
         return "text-gray-400";
     }
 }
+
+if (!function_exists('getProductsCount')) {
+    function getProductsCount(): int
+    {
+        return count(\App\Services\UserCartManager::getItems());
+
+    }
+}

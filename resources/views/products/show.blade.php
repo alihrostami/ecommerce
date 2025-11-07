@@ -189,16 +189,18 @@
                 </div>
 
 
-                <form action="http://127.0.0.1:8000/cart/add" method="POST">
-                    <input type="hidden" name="_token" value="4bYZgaUXw6NRUpehNCo79sVxnGyoZdTpQMBuSG48"
-                           autocomplete="off">
+                <form action="{{route('cart.add')}}" method="POST">
+                    @csrf
                     <button
                         class="w-full flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-2 px-3"
                         type="button">
                         <svg class="w-6 h-6 increment text-green-600">
                             <use href="#plus"></use>
                         </svg>
-                        <input type="number" name="qty" id="customInput" min="1" max="50" value="1"
+                        <input type="number"
+                               name="qty" id="customInput"
+                               min="1" max="{{$product->qty}}"
+                               value="{{$currentCartQty ?:1}}"
                                class="custom-input mr-4 text-lg bg-transparent">
                         <svg class="w-6 h-6 decrement text-red-500">
                             <use href="#minus"></use>
@@ -208,14 +210,19 @@
 
                     <br>
 
-                    <input type="hidden" name="product_id" value="2">
+                    <input type="hidden" name="product_id" value="{{$product->id}}">
 
                     <button type="submit"
                             class="w-full flex items-center gap-x-1 justify-center transition-all rounded-lg shadow py-2  bg-blue-500 hover:bg-blue-600 text-white ">
                         <svg class="w-5 h-5">
                             <use href="#shopping-bag"></use>
                         </svg>
-                        افزودن به سبد
+                        @if($currentCartQty==0)
+                            افزودن به سبد
+                        @else
+                            ویرایش تعداد در سبد خرید
+                        @endif
+
                     </button>
                 </form>
 
