@@ -62,4 +62,17 @@ class ProductListHandler
 
         }
     }
+
+    public function applySearch(): void
+    {
+        if ($this->request->missing('keyword')) {
+            return;
+        }
+        $keyword = $this->request->input('keyword');
+        $this->queryBuilder->whereAny([
+            'name',
+            'name_en',
+            'description',
+        ],'LIKE',"%{$keyword}%");
+    }
 }

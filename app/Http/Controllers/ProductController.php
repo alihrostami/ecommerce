@@ -18,6 +18,7 @@ class ProductController extends Controller
         $productListHandler = new ProductListHandler($request, $productsQuery);
         $productListHandler->applyFilter();
         $productListHandler->applySort();
+        $productListHandler->applySearch();
 
         $products = $productsQuery
             ->paginate(25);

@@ -6,7 +6,7 @@
         <div class="flex-between">
             <!-- Search Box -->
             <div class="relative z-20">
-                <form action="http://127.0.0.1:8000/products">
+                <form action="{{route('products.index')}}">
                     <!-- INPUT -->
                     <div
                         class="search-btn-open flex gap-x-2 app-border bg-gray-50 dark:bg-gray-700 p-1 rounded-full cursor-pointer ring-blue-400 w-84 transition-all"
@@ -21,14 +21,14 @@
                             placeholder="جستجو در محصولات..."
                             type="text"
                             name="keyword"
-                            value=""
+                            value="{{request()->query('keyword')}}"
                             style="border: 0"
                         />
                     </div>
                 </form>
             </div>
             <!-- Logo -->
-            <a href="http://127.0.0.1:8000" class="flex flex-col text-center ml-20">
+            <a href="{{route('products.index')}}" class="flex flex-col text-center ml-20">
                     <span class="font-MorabbaMedium text-4xl flex items-center">
                         فروشگاه<span class="text-blue-500">درنیکا</span>
                     </span>
