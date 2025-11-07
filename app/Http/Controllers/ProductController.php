@@ -47,6 +47,12 @@ class ProductController extends Controller
     {
         $title = $product->name;
         $product->load('category');
-        return view('products.show',compact('title','product'));
+
+        $relatedProducts = Product::query()
+            ->where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->take(6)
+            ->get();
+        return view('products.show', compact('title', 'product','relatedProducts'));
     }
 }
