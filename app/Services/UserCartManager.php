@@ -43,5 +43,20 @@ class UserCartManager
         return $cartItems[$productId]['qty'];
     }
 
+    public static function update(int $productId, int $qty): void
+    {
+        $cartItems = self::getItems();
+
+        if (isset($cartItems[$productId])) {
+
+            if ($qty <= 0) {
+                unset($cartItems[$productId]);
+            } else {
+                $cartItems[$productId]['qty'] = $qty;
+            }
+
+            session()->put('user_cart', $cartItems);
+        }
+    }
 
 }

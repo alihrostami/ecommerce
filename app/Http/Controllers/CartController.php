@@ -20,6 +20,43 @@ class CartController extends Controller
         $title = 'سبد خرید';
         $userCartItems = UserCartManager::getItemDetails();
 
-        return view('cart', compact('title', 'userCartItems'));
+        $summary = getCartSummary($userCartItems);
+        return view('cart', compact('title', 'userCartItems', 'summary'));
+    }
+
+    public function update(Request $request)
+    {
+        $items = $request->input('qty', []);
+
+        foreach ($items as $item) {
+            $productId = (int)$item['product_id'];
+            $qty = (int)$item['qty'];
+
+            UserCartManager::update($productId, $qty);
+        }
+
+        return redirect()->route('cart.index');
+    }
+
+    public function remove($id)
+    {
+
+        $cart = session()->get('user_cart', []);
+
+        $cart = array_filter($cart, function($item) use ($id) {
+            return $item['product_id'] != $id;
+        });
+
+
+        session()->put('user_cart', $cart);
+
+        return redirect()->route('cart.index');
+    }
+
+
+    public function clear()
+    {
+        session()->forget('user_cart');
+        return redirect()->route('cart.index');
     }
 }

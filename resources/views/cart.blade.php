@@ -37,28 +37,33 @@
                         <h2 class="font-DanaMedium text-xl">سبد خرید</h2>
                                                     <p class="text-gray-400">
                                 (
-                                1
+                               {{getProductsCount()}}
                                 کالا
                                 )
                             </p>
                                             </span>
-                    <a href="http://127.0.0.1:8000/cart/clear"
-                       class="flex items-center gap-x-1 text-red-600 dark:text-white cursor-pointer">
-                        <p class="mt-1 font-DanaMedium ">حذف همه</p>
-                        <svg class="w-5 h-5">
-                            <use href="#trash"></use>
-                        </svg>
-                    </a>
+                    @if($userCartItems)
+                        <a href="{{ route('cart.clear') }}"
+                           class="flex items-center gap-x-1 text-red-600 dark:text-white cursor-pointer">
+                            <p class="mt-1 font-DanaMedium ">حذف همه</p>
+                            <svg class="w-5 h-5">
+                                <use href="#trash"></use>
+                            </svg>
+                        </a>
+                    @endif
+
                 </div>
 
 
                 <!-- PRODUCT ITEMS -->
-                <form action="http://127.0.0.1:8000/cart/update-qty" method="POST">
+                <form action="{{ route('cart.update') }}" method="POST">
+                    @csrf
 
                     <div class="w-full flex flex-col gap-y-4 child:p-2 lg:child:p-4">
 
                         <!-- PRODUCT ITEM -->
-                        @foreach($userCartItems as $userCartItem)
+                        @forelse($userCartItems as $userCartItem)
+
                             <div
                                 class="w-full flex justify-between relative border-b-2 border-gray-200 dark:border-white/20 ">
                                 <div class="flex flex-col sm:flex-row items-center gap-6">
@@ -92,41 +97,49 @@
                                         <div
                                             class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
                                             <div class="product-card_price">
-                                                @if($userCartItem['product']->discount > 0)
+                                                @php
+                                                    $qty = $userCartItem['qty'];
+                                                    $unitPrice = $userCartItem['product']->price;
+                                                    $unitDiscount = $userCartItem['product']->discount;
+                                                    $totalPrice = $unitPrice * $qty;
+                                                    $totalDiscount = $unitDiscount * $qty;
+                                                    $finalPrice = $totalPrice - $totalDiscount;
+                                                @endphp
 
+                                                @if($unitDiscount > 0)
                                                     <del>
                                                         <div id="price-{{$userCartItem['product_id']}}"
-                                                             data-price="{{$userCartItem['product']->price}}"
-                                                             data-qty="{{$userCartItem['qty']}}"
+                                                             data-unit-price="{{$unitPrice}}"
+                                                             data-unit-discount="{{$unitDiscount}}"
                                                              data-has-discount="true"
-                                                             data-base-discount="{{$userCartItem['product']->discount}}">
-                                                            {{number_format($userCartItem['product']->price)}}
+                                                             data-cart-product-id="{{$userCartItem['product_id']}}"
+                                                             data-qty="{{$qty}}">
+                                                            {{number_format($totalPrice)}}
                                                         </div>
                                                         <h6>تومان</h6>
                                                     </del>
-
-
                                                     <p id="final-price-{{$userCartItem['product_id']}}">
-                                                        {{number_format($userCartItem['product']->price - $userCartItem['product']->discount)}}
+                                                        {{number_format($finalPrice)}}
                                                     </p>
                                                     <span>تومان</span>
                                                 @else
-
                                                     <div id="price-{{$userCartItem['product_id']}}"
-                                                         data-price="{{$userCartItem['product']->price}}"
-                                                         data-qty="{{$userCartItem['qty']}}"
+                                                         data-unit-price="{{$unitPrice}}"
+                                                         data-unit-discount="0"
                                                          data-has-discount="false"
-                                                         data-base-discount="0">
-                                                        {{number_format($userCartItem['product']->price)}}
+                                                         data-cart-product-id="{{$userCartItem['product_id']}}"
+                                                         data-qty="{{$qty}}">
+                                                        {{number_format($totalPrice)}}
                                                     </div>
                                                     <span>تومان</span>
                                                 @endif
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="hidden sm:flex items-end justify-between flex-col">
-                                    <a href="http://127.0.0.1:8000/cart/1/remove">
+                                    <a href="{{ route('cart.remove', $userCartItem['product_id']) }}">
                                         <svg class="w-5 h-5 cursor-pointer">
                                             <use href="#x-mark"></use>
                                         </svg>
@@ -134,66 +147,64 @@
                                 </div>
                             </div>
 
-                        @endforeach
+                        @empty
+                            <div class="w-full py-8 text-center text-gray-500">
+                                محصولی در سبد خرید وجود ندارد.
+                            </div>
+                        @endforelse
                     </div>
+                    @if($userCartItems)
+                        <button type="submit"
+                                class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
+                            <svg class="w-5 h-5">
+                                <use href="#shopping-bag"></use>
+                            </svg>
+                            بروزرسانی تعداد محصولات
+                        </button>
+                    @endif
 
-                    <button type="submit"
-                            class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
-                        <svg class="w-5 h-5">
-                            <use href="#shopping-bag"></use>
-                        </svg>
-                        بروزرسانی تعداد محصولات
-                    </button>
                 </form>
             </div>
 
-            <!-- PRICE BOX -->
+
             <div class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-4">
-                <!-- PRICE -->
                 <ul class="child:flex child:items-center child:justify-between space-y-8">
                     <li>
                         <p>
-                            قیمت کالاها
-                            (
-                            1
-                            )
+                            قیمت کالاها ({{ getProductsCount() }})
                         </p>
                         <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">
-                            1,000,000
+                            {{ number_format($summary['totalPrice']) }}
                             <span class="hidden xl:flex">تومان</span>
                         </p>
                     </li>
+
                     <li>
-                        <p>تخفیف </p>
+                        <p>تخفیف</p>
                         <p class="font-DanaMedium text-gray-700 dark:text-gray-200">
-                            100,000
-                            تومان
+                            {{ number_format($summary['totalDiscount']) }} تومان
                         </p>
                     </li>
+
                     <li class="border-t-2 border-dashed border-gray-400 pt-8">
                         <p>مبلغ نهایی :</p>
                         <p>
-                            900,000
-                            تومان
+                            {{ number_format($summary['finalPrice']) }} تومان
                         </p>
                     </li>
                 </ul>
 
-                <a href="http://127.0.0.1:8000/checkout"
+                <a href="{{ route('checkout.index') }}"
                    class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
                     <svg class="w-5 h-5">
                         <use href="#shopping-bag"></use>
                     </svg>
                     تایید و تکمیل سفارش
                 </a>
-
             </div>
+
         </section>
 
     </main>
 @endsection
-@push('scripts')
-    <script>
 
-    </script>
-@endpush

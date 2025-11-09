@@ -55,3 +55,28 @@ if (!function_exists('getProductsCount')) {
 
     }
 }
+if (!function_exists('getCartSummary')) {
+
+    function getCartSummary($userCartItems)
+    {
+        $totalPrice = 0;
+        $totalDiscount = 0;
+
+        foreach ($userCartItems as $item) {
+            $qty = $item['qty'];
+            $price = $item['product']->price * $qty;
+            $discount = $item['product']->discount * $qty;
+
+            $totalPrice += $price;
+            $totalDiscount += $discount;
+        }
+
+        $finalPrice = $totalPrice - $totalDiscount;
+
+        return [
+            'totalPrice' => $totalPrice,
+            'totalDiscount' => $totalDiscount,
+            'finalPrice' => $finalPrice,
+        ];
+    }
+}

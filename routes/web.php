@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
@@ -50,5 +51,13 @@ Route::prefix('products')->as('products.')->group(function () {
 Route::prefix('cart')->as('cart.')->group(function () {
     Route::get('/', [CartController::class, 'index'])->name('index');
     Route::post('add', [CartController::class, 'add'])->name('add');
+    Route::post('update', [CartController::class, 'update'])->name('update');
+    Route::get('{id}/remove', [CartController::class, 'remove'])->name('remove');
+    Route::get('clear', [CartController::class, 'clear'])->name('clear');
 
+
+});
+Route::prefix('checkout')->as('checkout.')->group(function () {
+    Route::get('/', [CheckoutController::class, 'index'])->name('index');
+    Route::post('process', [CheckoutController::class, 'process'])->name('process');
 });
