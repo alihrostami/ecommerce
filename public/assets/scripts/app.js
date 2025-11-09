@@ -113,9 +113,7 @@ closeMenuButton?.addEventListener('click', () => {
 
 function updateInfo() {
     let qtyInput = $(this).closest('button').find('.qty-input');
-    if (!qtyInput.length) {
-        qtyInput = $(this);
-    }
+    if (!qtyInput.length) qtyInput = $(this);
 
     let currentQty = parseInt(qtyInput.val());
     let productId = qtyInput.data('cart-product-id');
@@ -123,27 +121,26 @@ function updateInfo() {
     let priceElement = $('#price-' + productId);
     let finalPriceElement = $('#final-price-' + productId);
 
-    let originalPrice = parseFloat(priceElement.data('price'));
+    let unitPrice = parseFloat(priceElement.data('unit-price'));
+    let unitDiscount = parseFloat(priceElement.data('unit-discount')) || 0;
     let hasDiscount = priceElement.data('has-discount') === true || priceElement.data('has-discount') === "true";
-    let baseDiscount = parseFloat(priceElement.data('base-discount')) || 0;
 
 
-    let basePrice = originalPrice;
+    let totalPrice = unitPrice * currentQty;
 
 
-    let updatedPrice = basePrice * currentQty;
+    let totalDiscount = hasDiscount ? unitDiscount * currentQty : 0;
 
 
-    let totalDiscount = hasDiscount ? baseDiscount * currentQty : 0;
-
-    let finalPrice = updatedPrice - totalDiscount;
+    let finalPrice = totalPrice - totalDiscount;
 
 
-    priceElement.text(numberWithCommas(updatedPrice.toFixed(0)));
-    finalPriceElement.text(numberWithCommas(finalPrice.toFixed(0)));
+    priceElement.text(numberWithCommas(totalPrice.toFixed(0)));
+    if (finalPriceElement.length) {
+        finalPriceElement.text(numberWithCommas(finalPrice.toFixed(0)));
+    }
 
 
-    priceElement.data('qty', currentQty);
 }
 
 
@@ -172,6 +169,7 @@ $('.decrement').on('click', function () {
         qtyInput.val(current - 1).trigger('change');
     }
 });
+
 
 
 openCategory?.addEventListener('click', () => {
