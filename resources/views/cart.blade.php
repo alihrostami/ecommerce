@@ -92,20 +92,35 @@
                                         <div
                                             class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
                                             <div class="product-card_price">
-                                                <del>
+                                                @if($userCartItem['product']->discount > 0)
+
+                                                    <del>
+                                                        <div id="price-{{$userCartItem['product_id']}}"
+                                                             data-price="{{$userCartItem['product']->price}}"
+                                                             data-qty="{{$userCartItem['qty']}}"
+                                                             data-has-discount="true"
+                                                             data-base-discount="{{$userCartItem['product']->discount}}">
+                                                            {{number_format($userCartItem['product']->price)}}
+                                                        </div>
+                                                        <h6>تومان</h6>
+                                                    </del>
+
+
+                                                    <p id="final-price-{{$userCartItem['product_id']}}">
+                                                        {{number_format($userCartItem['product']->price - $userCartItem['product']->discount)}}
+                                                    </p>
+                                                    <span>تومان</span>
+                                                @else
+
                                                     <div id="price-{{$userCartItem['product_id']}}"
                                                          data-price="{{$userCartItem['product']->price}}"
                                                          data-qty="{{$userCartItem['qty']}}"
-                                                         data-has-discount="{{$userCartItem['product']->discount>0 ? 'true':'false'}}"
-                                                         data-base-discount="{{$userCartItem['product']->discount}}">
+                                                         data-has-discount="false"
+                                                         data-base-discount="0">
                                                         {{number_format($userCartItem['product']->price)}}
                                                     </div>
-                                                    <h6>تومان</h6>
-                                                </del>
-                                                <p id="final-price-{{$userCartItem['product_id']}}">
-                                                    900,000
-                                                </p>
-                                                <span>تومان</span>
+                                                    <span>تومان</span>
+                                                @endif
                                             </div>
                                         </div>
                                     </div>
@@ -178,35 +193,7 @@
     </main>
 @endsection
 @push('scripts')
-<script>
+    <script>
 
-    $('.qty-input').on('change', function () {
-        let currentQty = $(this).val();
-
-        let productId = $(this).data('cart-product-id');
-        let priceElement = $('#price-' + productId);
-
-        let originalPrice = priceElement.data('price');
-        let originalQty = priceElement.data('qty');
-
-        let basePrice = originalPrice / originalQty;
-
-        let updatedPrice = basePrice * currentQty;
-
-        priceElement.text(updatedPrice);
-
-        let hasDiscount = priceElement.data('has-discount');
-
-        if (hasDiscount) {
-            let baseDiscount = priceElement.data('base-discount');
-
-            let totalDiscount = baseDiscount * currentQty;
-
-            let finalPriceElement = $('#final-price-' + productId);
-
-            finalPriceElement.text(updatedPrice - totalDiscount)
-        }
-    })
-
-</script>
+    </script>
 @endpush
