@@ -345,7 +345,7 @@
             }
 
             btnPlus.addEventListener("click", () => {
-               
+
                 qtyInput.value = Math.min(maxQty, parseInt(qtyInput.value) + 1);
 
                 updatePrice();

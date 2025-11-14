@@ -27,12 +27,13 @@
         </nav>
 
         <!-- shopping cart -->
-        <section
-            class="flex flex-col lg:flex-row justify-between items-start gap-4 child:rounded-lg child:bg-white child:dark:bg-gray-800 child:shadow child:p-4 mt-5">
-            <!-- products -->
-            <div class="w-full  lg:w-3/4  flex flex-col gap-y-8 ">
-                <!-- shopping cart header -->
-                <div class="flex items-center justify-between">
+        @if($userCartItems)
+            <section
+                class="flex flex-col lg:flex-row justify-between items-start gap-4 child:rounded-lg child:bg-white child:dark:bg-gray-800 child:shadow child:p-4 mt-5">
+                <!-- products -->
+                <div class="w-full  lg:w-3/4  flex flex-col gap-y-8 ">
+                    <!-- shopping cart header -->
+                    <div class="flex items-center justify-between">
                     <span class="flex items-center gap-x-2">
                         <h2 class="font-DanaMedium text-xl">سبد خرید</h2>
                                                     <p class="text-gray-400">
@@ -42,7 +43,7 @@
                                 )
                             </p>
                                             </span>
-                    @if($userCartItems)
+
                         <a href="{{ route('cart.clear') }}"
                            class="flex items-center gap-x-1 text-red-600 dark:text-white cursor-pointer">
                             <p class="mt-1 font-DanaMedium ">حذف همه</p>
@@ -50,160 +51,172 @@
                                 <use href="#trash"></use>
                             </svg>
                         </a>
-                    @endif
-
-                </div>
 
 
-                <!-- PRODUCT ITEMS -->
-                <form action="{{ route('cart.update') }}" method="POST">
-                    @csrf
+                    </div>
 
-                    <div class="w-full flex flex-col gap-y-4 child:p-2 lg:child:p-4">
 
-                        <!-- PRODUCT ITEM -->
-                        @forelse($userCartItems as $userCartItem)
+                    <!-- PRODUCT ITEMS -->
+                    <form action="{{ route('cart.update') }}" method="POST">
+                        @csrf
 
-                            <div
-                                class="w-full flex justify-between relative border-b-2 border-gray-200 dark:border-white/20 ">
-                                <div class="flex flex-col sm:flex-row items-center gap-6">
-                                    <!-- IMG AND COUNT BTN -->
-                                    <div class="flex w-fit flex-col">
-                                        <img src="http://127.0.0.1:8000/assets/images/products/8.webp" class="w-36"
-                                             alt="">
-                                        <button type="button"
-                                                class="flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-1 px-2">
-                                            <svg class="plus-button w-4 h-4 increment text-green-600">
-                                                <use href="#plus"></use>
-                                            </svg>
-                                            <input type="number"
-                                                   name="qty[{{$userCartItem['product_id']}}][qty]"
-                                                   data-cart-product-id="{{$userCartItem['product_id']}}" id="qtyInput"
-                                                   min="1" max="{{$userCartItem['product']->qty}}"
-                                                   value="{{$userCartItem['qty']}}"
-                                                   class="qty-input custom-input mr-8 text-lg bg-transparent">
-                                            <input type="hidden" name="qty[{{$userCartItem['product_id']}}][product_id]"
-                                                   value="{{$userCartItem['product_id']}}">
-                                            <svg class="minus-button w-4 h-4 decrement text-red-500">
-                                                <use href="#minus"></use>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <!-- information and name product -->
-                                    <div class="flex flex-col gap-y-4">
-                                        <h2 class="font-DanaMedium line-clamp-1">
-                                            {{getFullProductName($userCartItem['product'])}}
-                                        </h2>
-                                        <div
-                                            class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
-                                            <div class="product-card_price">
-                                                @php
-                                                    $qty = $userCartItem['qty'];
-                                                    $unitPrice = $userCartItem['product']->price;
-                                                    $unitDiscount = $userCartItem['product']->discount;
-                                                    $totalPrice = $unitPrice * $qty;
-                                                    $totalDiscount = $unitDiscount * $qty;
-                                                    $finalPrice = $totalPrice - $totalDiscount;
-                                                @endphp
+                        <div class="w-full flex flex-col gap-y-4 child:p-2 lg:child:p-4">
 
-                                                @if($unitDiscount > 0)
-                                                    <del>
+                            <!-- PRODUCT ITEM -->
+                            @foreach($userCartItems as $userCartItem)
+
+                                <div
+                                    class="w-full flex justify-between relative border-b-2 border-gray-200 dark:border-white/20 ">
+                                    <div class="flex flex-col sm:flex-row items-center gap-6">
+                                        <!-- IMG AND COUNT BTN -->
+                                        <div class="flex w-fit flex-col">
+                                            <img src="http://127.0.0.1:8000/assets/images/products/8.webp" class="w-36"
+                                                 alt="">
+                                            <button type="button"
+                                                    class="flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-1 px-2">
+                                                <svg class="plus-button w-4 h-4 increment text-green-600">
+                                                    <use href="#plus"></use>
+                                                </svg>
+                                                <input type="number"
+                                                       name="qty[{{$userCartItem['product_id']}}][qty]"
+                                                       data-cart-product-id="{{$userCartItem['product_id']}}"
+                                                       id="qtyInput"
+                                                       min="1" max="{{$userCartItem['product']->qty}}"
+                                                       value="{{$userCartItem['qty']}}"
+                                                       class="qty-input custom-input mr-8 text-lg bg-transparent">
+                                                <input type="hidden"
+                                                       name="qty[{{$userCartItem['product_id']}}][product_id]"
+                                                       value="{{$userCartItem['product_id']}}">
+                                                <svg class="minus-button w-4 h-4 decrement text-red-500">
+                                                    <use href="#minus"></use>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <!-- information and name product -->
+                                        <div class="flex flex-col gap-y-4">
+                                            <h2 class="font-DanaMedium line-clamp-1">
+                                                {{getFullProductName($userCartItem['product'])}}
+                                            </h2>
+                                            <div
+                                                class="flex items-center gap-x-1 text-gray-700 dark:text-gray-300 font-DanaMedium mt-4">
+                                                <div class="product-card_price">
+                                                    @php
+                                                        $qty = $userCartItem['qty'];
+                                                        $unitPrice = $userCartItem['product']->price;
+                                                        $unitDiscount = $userCartItem['product']->discount;
+                                                        $totalPrice = $unitPrice * $qty;
+                                                        $totalDiscount = $unitDiscount * $qty;
+                                                        $finalPrice = $totalPrice - $totalDiscount;
+                                                    @endphp
+
+                                                    @if($unitDiscount > 0)
+                                                        <del>
+                                                            <div id="price-{{$userCartItem['product_id']}}"
+                                                                 data-unit-price="{{$unitPrice}}"
+                                                                 data-unit-discount="{{$unitDiscount}}"
+                                                                 data-has-discount="true"
+                                                                 data-cart-product-id="{{$userCartItem['product_id']}}"
+                                                                 data-qty="{{$qty}}">
+                                                                {{number_format($totalPrice)}}
+                                                            </div>
+                                                            <h6>تومان</h6>
+                                                        </del>
+                                                        <p id="final-price-{{$userCartItem['product_id']}}">
+                                                            {{number_format($finalPrice)}}
+                                                        </p>
+                                                        <span>تومان</span>
+                                                    @else
                                                         <div id="price-{{$userCartItem['product_id']}}"
                                                              data-unit-price="{{$unitPrice}}"
-                                                             data-unit-discount="{{$unitDiscount}}"
-                                                             data-has-discount="true"
+                                                             data-unit-discount="0"
+                                                             data-has-discount="false"
                                                              data-cart-product-id="{{$userCartItem['product_id']}}"
                                                              data-qty="{{$qty}}">
                                                             {{number_format($totalPrice)}}
                                                         </div>
-                                                        <h6>تومان</h6>
-                                                    </del>
-                                                    <p id="final-price-{{$userCartItem['product_id']}}">
-                                                        {{number_format($finalPrice)}}
-                                                    </p>
-                                                    <span>تومان</span>
-                                                @else
-                                                    <div id="price-{{$userCartItem['product_id']}}"
-                                                         data-unit-price="{{$unitPrice}}"
-                                                         data-unit-discount="0"
-                                                         data-has-discount="false"
-                                                         data-cart-product-id="{{$userCartItem['product_id']}}"
-                                                         data-qty="{{$qty}}">
-                                                        {{number_format($totalPrice)}}
-                                                    </div>
-                                                    <span>تومان</span>
-                                                @endif
+                                                        <span>تومان</span>
+                                                    @endif
 
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="hidden sm:flex items-end justify-between flex-col">
+                                        <a href="{{ route('cart.remove', $userCartItem['product_id']) }}">
+                                            <svg class="w-5 h-5 cursor-pointer">
+                                                <use href="#x-mark"></use>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="hidden sm:flex items-end justify-between flex-col">
-                                    <a href="{{ route('cart.remove', $userCartItem['product_id']) }}">
-                                        <svg class="w-5 h-5 cursor-pointer">
-                                            <use href="#x-mark"></use>
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
 
-                        @empty
-                            <div class="w-full py-8 text-center text-gray-500">
-                                محصولی در سبد خرید وجود ندارد.
-                            </div>
-                        @endforelse
-                    </div>
-                    @if($userCartItems)
-                        <button type="submit"
-                                class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
-                            <svg class="w-5 h-5">
-                                <use href="#shopping-bag"></use>
-                            </svg>
-                            بروزرسانی تعداد محصولات
-                        </button>
-                    @endif
+                            @endforeach
+                        </div>
+                        @if($userCartItems)
+                            <button type="submit"
+                                    class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
+                                <svg class="w-5 h-5">
+                                    <use href="#shopping-bag"></use>
+                                </svg>
+                                بروزرسانی تعداد محصولات
+                            </button>
+                        @endif
 
-                </form>
-            </div>
+                    </form>
+                </div>
 
 
-            <div class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-4">
-                <ul class="child:flex child:items-center child:justify-between space-y-8">
-                    <li>
-                        <p>
-                            قیمت کالاها ({{ getProductsCount() }})
-                        </p>
-                        <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">
-                            {{ number_format($summary['totalPrice']) }}
-                            <span class="hidden xl:flex">تومان</span>
-                        </p>
-                    </li>
+                <div class="w-full lg:w-1/4 lg:sticky top-5 flex flex-col gap-y-4">
+                    <ul class="child:flex child:items-center child:justify-between space-y-8">
+                        <li>
+                            <p>
+                                قیمت کالاها ({{ getProductsCount() }})
+                            </p>
+                            <p class="flex gap-x-1 text-gray-600 dark:text-gray-300 ">
+                                {{ number_format($summary['totalPrice']) }}
+                                <span class="hidden xl:flex">تومان</span>
+                            </p>
+                        </li>
 
-                    <li>
-                        <p>تخفیف</p>
-                        <p class="font-DanaMedium text-gray-700 dark:text-gray-200">
-                            {{ number_format($summary['totalDiscount']) }} تومان
-                        </p>
-                    </li>
+                        <li>
+                            <p>تخفیف</p>
+                            <p class="font-DanaMedium text-gray-700 dark:text-gray-200">
+                                {{ number_format($summary['totalDiscount']) }} تومان
+                            </p>
+                        </li>
 
-                    <li class="border-t-2 border-dashed border-gray-400 pt-8">
-                        <p>مبلغ نهایی :</p>
-                        <p>
-                            {{ number_format($summary['finalPrice']) }} تومان
-                        </p>
-                    </li>
-                </ul>
+                        <li class="border-t-2 border-dashed border-gray-400 pt-8">
+                            <p>مبلغ نهایی :</p>
+                            <p>
+                                {{ number_format($summary['finalPrice']) }} تومان
+                            </p>
+                        </li>
+                    </ul>
 
-                <a href="{{ route('checkout.index') }}"
-                   class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
-                    <svg class="w-5 h-5">
-                        <use href="#shopping-bag"></use>
+                    <a href="{{ route('checkout.index') }}"
+                       class="w-full mt-4 flex items-center gap-x-1 justify-center bg-blue-500 text-white hover:bg-blue-600 transition-all rounded-lg shadow py-2">
+                        <svg class="w-5 h-5">
+                            <use href="#shopping-bag"></use>
+                        </svg>
+                        تایید و تکمیل سفارش
+                    </a>
+                </div>
+
+            </section>
+        @else
+            <section class="flex flex-col items-center justify-center gap-y-3 mt-5">
+                <img class="max-w-60" src="./assets/images/svg/empty-cart.svg" alt="">
+                <h1 class="font-DanaDemiBold text-gray-700 dark:text-gray-300 text-2xl mt-2">
+                    سبد خرید شما خالی است!
+                </h1>
+                <a class="flex items-center justify-center w-fit text-sky-500" href="{{route('products.index')}}">
+                    مشاهده فروشگاه
+                    <svg class="size-4 mb-0.5">
+                        <use href="#chevron-left"></use>
                     </svg>
-                    تایید و تکمیل سفارش
                 </a>
-            </div>
-
-        </section>
+            </section>
+        @endif
 
     </main>
 @endsection
