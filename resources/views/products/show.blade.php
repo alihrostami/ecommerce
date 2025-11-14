@@ -182,8 +182,14 @@
                 <!-- PRICE -->
                 <div class="flex items-center gap-x-1 justify-center">
                     <div class="product-card_price">
-                        <del>80,000 <h6>تومان</h6></del>
-                        <p>79,000</p>
+                        @if($product->discount > 0)
+                            <del>
+                                <p id="price-original">{{ number_format($product->price) }}</p>
+                                <h6>تومان</h6>
+                            </del>
+                        @endif
+
+                        <p id="final_price">{{ number_format($product->price - $product->discount) }}</p>
                         <span>تومان</span>
                     </div>
                 </div>
@@ -201,7 +207,7 @@
                                name="qty" id="customInput"
                                min="1" max="{{$product->qty}}"
                                value="{{$currentCartQty ?:1}}"
-                               class="custom-input mr-4 text-lg bg-transparent">
+                               class="custom-input mr-4 text-lg bg-transparent qty-input">
                         <svg class="w-6 h-6 decrement text-red-500">
                             <use href="#minus"></use>
                         </svg>
@@ -302,3 +308,59 @@
         @endif
     </main>
 @endsection
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const qtyInput = document.getElementById("customInput");
+            const btnPlus = document.querySelector(".increment");
+            const btnMinus = document.querySelector(".decrement");
+
+            const finalPriceEl = document.getElementById("final_price");
+            const originalPriceEl = document.getElementById("price-original");
+
+
+            const basePrice = {{ $product->price - $product->discount }};
+            const baseOriginalPrice = {{ $product->price }};
+            const maxQty = {{ $product->qty }};
+
+
+            function updatePrice() {
+                let qty = parseInt(qtyInput.value);
+
+                if (qty < 1) qty = 1;
+                if (qty > maxQty) qty = maxQty;
+
+                qtyInput.value = qty;
+
+
+                const total = qty * basePrice;
+                finalPriceEl.textContent = total.toLocaleString();
+
+
+                if (originalPriceEl) {
+                    const totalOriginal = qty * baseOriginalPrice;
+                    originalPriceEl.textContent = totalOriginal.toLocaleString();
+                }
+            }
+
+            btnPlus.addEventListener("click", () => {
+               
+                qtyInput.value = Math.min(maxQty, parseInt(qtyInput.value) + 1);
+
+                updatePrice();
+            });
+
+            btnMinus.addEventListener("click", () => {
+                qtyInput.value = Math.max(1, parseInt(qtyInput.value) - 1);
+                updatePrice();
+            });
+
+            qtyInput.addEventListener("input", () => updatePrice());
+
+            updatePrice();
+        });
+    </script>
+
+
+@endpush
