@@ -133,7 +133,7 @@
                 </li>
 
                 <li class="menu-item">
-                    <a href="/" class="menu-item_link">
+                    <a href="{{route('categories.index')}}" class="menu-item_link">
                         دسته بندی ها
                     </a>
                 </li>
