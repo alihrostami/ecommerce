@@ -4,7 +4,7 @@
         <!-- CATEGORY -->
         <section class="mx-4 lg:container mt-20">
             <!-- SECTION TITLE -->
-           
+
             <!-- ITEMS -->
             <div
                 class="flex items-center justify-evenly flex-wrap mt-12 child:mb-8 gap-x-8 child:items-center child:flex-col child:duration-300 child:cursor-pointer child:gap-y-1 child:text-gray-800 child:dark:text-gray-300 child:relative"

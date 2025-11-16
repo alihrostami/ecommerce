@@ -195,44 +195,55 @@
                 </div>
 
 
-                <form action="{{route('cart.add')}}" method="POST">
-                    @csrf
-                    <button
-                        class="w-full flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-2 px-3"
-                        type="button">
-                        <svg class="w-6 h-6 increment text-green-600">
-                            <use href="#plus"></use>
-                        </svg>
-                        <input type="number"
-                               name="qty" id="customInput"
-                               min="1" max="{{$product->qty}}"
-                               value="{{$currentCartQty ?:1}}"
-                               class="custom-input mr-4 text-lg bg-transparent qty-input">
-                        <svg class="w-6 h-6 decrement text-red-500">
-                            <use href="#minus"></use>
-                        </svg>
-                    </button>
+                @if($product->qty == 0)
 
+                    <div class="text-center text-red-600 font-bold text-lg">
+                        اتمام موجودی
+                    </div>
 
-                    <br>
+                @else
 
-                    <input type="hidden" name="product_id" value="{{$product->id}}">
+                    <form action="{{route('cart.add')}}" method="POST">
+                        @csrf
 
-                    <button type="submit"
-                            class="w-full flex items-center gap-x-1 justify-center transition-all rounded-lg shadow py-2  bg-blue-500 hover:bg-blue-600 text-white ">
-                        <svg class="w-5 h-5">
-                            <use href="#shopping-bag"></use>
-                        </svg>
-                        @if($currentCartQty==0)
-                            افزودن به سبد
-                        @else
-                            ویرایش تعداد در سبد خرید
-                        @endif
+                        <div
+                            class="w-full flex items-center justify-between gap-x-1 rounded-lg border border-gray-200 dark:border-white/20 py-2 px-3"
+                        >
+                            <svg class="w-6 h-6 increment text-green-600 cursor-pointer">
+                                <use href="#plus"></use>
+                            </svg>
 
-                    </button>
-                </form>
+                            <input type="number"
+                                   name="qty" id="customInput"
+                                   min="1" max="{{ $product->qty }}"
+                                   value="{{ $currentCartQty ?: 1 }}"
+                                   class="custom-input mr-4 text-lg bg-transparent qty-input">
+
+                            <svg class="w-6 h-6 decrement text-red-500 cursor-pointer">
+                                <use href="#minus"></use>
+                            </svg>
+                        </div>
+
+                        <br>
+
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                        <button type="submit"
+                                class="w-full flex items-center gap-x-1 justify-center transition-all rounded-lg shadow py-2  bg-blue-500 hover:bg-blue-600 text-white ">
+                            <svg class="w-5 h-5">
+                                <use href="#shopping-bag"></use>
+                            </svg>
+                            @if($currentCartQty == 0)
+                                افزودن به سبد
+                            @else
+                                ویرایش تعداد در سبد خرید
+                            @endif
+                        </button>
+                    </form>
+                @endif
 
             </div>
+
         </section>
         @if(!empty($product->description))
             <section
@@ -326,6 +337,7 @@
 
 
             function updatePrice() {
+
                 let qty = parseInt(qtyInput.value);
 
                 if (qty < 1) qty = 1;
@@ -344,15 +356,17 @@
                 }
             }
 
-            btnPlus.addEventListener("click", () => {
+            btnPlus.addEventListener("click", (e) => {
 
-                qtyInput.value = Math.min(maxQty, parseInt(qtyInput.value) + 1);
+
+                qtyInput.value = Math.min(maxQty, parseInt(qtyInput.value) );
 
                 updatePrice();
             });
 
-            btnMinus.addEventListener("click", () => {
-                qtyInput.value = Math.max(1, parseInt(qtyInput.value) - 1);
+            btnMinus.addEventListener("click", (e) => {
+
+                qtyInput.value = Math.max(1, parseInt(qtyInput.value) );
                 updatePrice();
             });
 
