@@ -359,14 +359,14 @@
             btnPlus.addEventListener("click", (e) => {
 
 
-                qtyInput.value = Math.min(maxQty, parseInt(qtyInput.value) );
-
+                qtyInput.value = Math.min(maxQty, parseInt(qtyInput.value) + 1);
+               
                 updatePrice();
             });
 
             btnMinus.addEventListener("click", (e) => {
 
-                qtyInput.value = Math.max(1, parseInt(qtyInput.value) );
+                qtyInput.value = Math.max(1, parseInt(qtyInput.value) - 1);
                 updatePrice();
             });
 
@@ -375,6 +375,5 @@
             updatePrice();
         });
     </script>
-
 
 @endpush
